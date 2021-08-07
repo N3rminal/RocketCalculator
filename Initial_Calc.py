@@ -5,9 +5,9 @@ import math
 # initiate variable dictionaries
 x = {}
 
-#main script goes here
 
 # this function will take an input file and convert it to the dictionary
+# once used all variables in dictionary x will be updated autonomously
 # format for input file
 # variable = value
 # variable2 = value
@@ -24,6 +24,44 @@ def read_input(file):
             # insert
             x.update({split[0]: split[1]})
     return ()
+
+#THIS IS USEFUL DO NOT DELETE
+def getkeys(dictionary):
+    return [*dictionary]
+
+# allows to write dictionary(data) to file(file). If clear is 1 then the previous data is not carried over, if 0 then it only overwrites what is in dictionary(data)
+def write_output(data, file, clear):
+    keys = getkeys(data)
+    if clear == 1:
+        with open(file, 'w') as f:
+            for i in keys:
+                text = i+' = '+data[i]+'\n'
+                f.write(text)
+    else:
+        # this is totally reused shitty code, will it cause unnecisary slowdowns? YES! do I care? HELL NO
+        split = []
+        with open(file) as f:
+            for line in f:
+                # copy
+                split = (line.split(' = '))
+                # reformat
+                split[1] = split[1].strip('\n')
+                # insert
+                #finding if the key in dictionary is ocupied
+                try:
+                    temp = data[split[0]]
+                except:
+                    x.update({split[0]: split[1]})
+                else:
+                    continue
+                data.update({split[0]: split[1]})
+            print(data)
+        with open(file, 'w') as f:
+            for i in keys:
+                text = i+' = '+data[i]+'\n'
+                f.write(text)
+    return ()
+
 
 # This function converts input csv file to a matrix (list of list)
 # Input should be inserted to desending order (however asending should work but I am to lazy to verify that)
@@ -69,31 +107,38 @@ def graph_to_value(value, dataset):
     # plug in x
     return (m * value + b)
 
+
 # This will calculate Tank parameters
 def tank():
-    return()
+    return ()
+
 
 # This will define plumbing and pipe size
 def pipe():
     return ()
 
+
 # This will calculate autogonous pressurization system
 def auto_pressure():
     return ()
 
+
 # This will calculate Combustion conditions
 def combustion():
-    return()
+    return ()
+
 
 # This will calculate nozzle parameters
 def nozzle():
-    return()
+    return ()
 
-#This will define cooling system
+
+# This will define cooling system
 def cooling():
-    return()
+    return ()
 
-#this will define swirl injuector\
+
+# this will define swirl injuector\
 def simpleswirl():
     spray_angle = x['spray_angle']
     mass_flow_rate = x['mass_flow_rate']
@@ -105,20 +150,24 @@ def simpleswirl():
     flow_coefficient = graph_to_value(geometric_characteristic, 'A_mu')
     nozzle_radius = 0.475 * math.sqrt(mass_flow_rate / (flow_coefficient * math.sqrt(density * pressure_drop)))
     inlet_spacing_radius = nozzle_radius
-    inlet_radius = math.sqrt((inlet_spacing_radius*nozzle_radius)/(inlet_quantity*geometric_characteristic))
-    inlet_velocity = mass_flow_rate/(inlet_quantity*math.pi*(inlet_radius**2)*density)
-    reynolds_number = (inlet_velocity*inlet_radius*2*math.sqrt(inlet_quantity))/kinematic_viscosity
+    inlet_radius = math.sqrt((inlet_spacing_radius * nozzle_radius) / (inlet_quantity * geometric_characteristic))
+    inlet_velocity = mass_flow_rate / (inlet_quantity * math.pi * (inlet_radius ** 2) * density)
+    reynolds_number = (inlet_velocity * inlet_radius * 2 * math.sqrt(inlet_quantity)) / kinematic_viscosity
     if reynolds_number < 10000:
         print("error, Reynolds Number too low")
-    nozzle_length = 2*nozzle_radius
+    nozzle_length = 2 * nozzle_radius
     inlet_length = 4 * inlet_radius
     vortex_length = 1.5 * inlet_spacing_radius
     vortex_radius = inlet_spacing_radius + inlet_radius
     print('nozzle radius = ', nozzle_radius * 100)
     print('inlet radius = ', inlet_radius * 100)
-    print('inlet length',inlet_length*100)
-    print('vortex_lenght',vortex_length*100)
-    print('Vortex Radius',vortex_radius*100)
+    print('inlet length', inlet_length * 100)
+    print('vortex_lenght', vortex_length * 100)
+    print('Vortex Radius', vortex_radius * 100)
     print('nozzle length = ', nozzle_length * 100)
     print('flow coefficient = ', flow_coefficient)
     return ()
+
+
+# Main Script Goes here
+
