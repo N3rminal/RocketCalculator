@@ -2,69 +2,77 @@
 import csv
 import math
 
-# initiate variable dictionaries
+# initiate dictionary
 x = {}
 
+# takes a line from an input file
+#
+# example:
+# first_prime = 2
+#
+# returns:
+# ["first_prime", "2"]
+def format_input_line(line):
+    split = (line.split(' = ')) # copy
+    split[1] = split[1].strip('\n') # reformat
+    return split
 
 # this function will take an input file and convert it to the dictionary
 # once used all variables in dictionary x will be updated autonomously
-# format for input file
-# variable = value
-# variable2 = value
+#
+# format for input file:
+# <variable> = <value>
+#
+# example:
+# first_prime = 2
 def read_input(file):
     with open(file) as f:
         global x
-        split = []
         for line in f:
-            # copy
-            split = (line.split(' = '))
-            # reformat
-            split[1] = split[1].strip('\n')
+            split = format_input_line(line)
             split[1] = float(split[1])
             # insert
             x.update({split[0]: split[1]})
     return ()
 
-#THIS IS USEFUL DO NOT DELETE
+# THIS IS USEFUL DO NOT DELETE
 def getkeys(dictionary):
     return [*dictionary]
 
 # allows to write dictionary(data) to file(file). If clear is 1 then the previous data is not carried over, if 0 then it only overwrites what is in dictionary(data)
 def write_output(data, file, clear):
-    keys = getkeys(data)
-    if clear == 1:
+    def write_to_file(data, file):
         with open(file, 'w') as f:
             for i in keys:
-                text = i+' = '+data[i]+'\n'
+                text = f"{i} = {data[i]}\n"
                 f.write(text)
+
+    keys = getkeys(data)
+    if clear == 1:
+        write_to_file(data, file)
     else:
         # this is totally reused shitty code, will it cause unnecisary slowdowns? YES! do I care? HELL NO
         split = []
         with open(file) as f:
             for line in f:
-                # copy
-                split = (line.split(' = '))
-                # reformat
-                split[1] = split[1].strip('\n')
+                split = format_input_line(line)
                 # insert
-                #finding if the key in dictionary is ocupied
+                # finding if the key in dictionary is occupied
                 try:
-                    temp = data[split[0]]
+                    unused = data[split[0]]
                 except:
                     x.update({split[0]: split[1]})
                 else:
                     continue
                 data.update({split[0]: split[1]})
             print(data)
-        with open(file, 'w') as f:
-            for i in keys:
-                text = i+' = '+data[i]+'\n'
-                f.write(text)
+
+        write_to_file(data, file)
     return ()
 
 
 # This function converts input csv file to a matrix (list of list)
-# Input should be inserted to desending order (however asending should work but I am to lazy to verify that)
+# Input should be inserted to desending order (however asending should work but I am too lazy to verify that)
 def graph_to_value(value, dataset):
     # Import Data points
     p = 0
