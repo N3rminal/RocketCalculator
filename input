@@ -1,2 +1,10 @@
-tank_pressure = 300
-tank_volume = 6
+spray_angle = 90
+mass_flow_rate = .133
+density = 1000
+pressure_drop = 277887
+inlet_quantity = 2
+kinematic_viscosity = 0.0000010533
+swirler_length_coefficient = 2
+inlet_ratio = 4
+vortex_ratio = 2
+length_to_diameter = 2

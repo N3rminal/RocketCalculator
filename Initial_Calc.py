@@ -3,6 +3,8 @@ import csv
 import math
 
 # initiate variable dictionaries
+import re
+
 x = {}
 
 
@@ -16,14 +18,16 @@ def read_input(file):
         global x
         split = []
         for line in f:
-            # copy
-            split = (line.split(' = '))
-            # reformat
-            split[1] = split[1].strip('\n')
-            split[1] = float(split[1])
-            # insert
-            x.update({split[0]: split[1]})
-    return ()
+            try:
+                # copy
+                split = (line.split(' = '))
+                # reformat
+                split[1] = split[1].strip('\n')
+                split[1] = float(split[1])
+                # insert
+                x.update({split[0]: split[1]})
+            except:
+                continue
 
 #THIS IS USEFUL DO NOT DELETE
 def getkeys(dictionary):
@@ -35,7 +39,7 @@ def write_output(data, file, clear):
     if clear == 1:
         with open(file, 'w') as f:
             for i in keys:
-                text = i+' = '+data[i]+'\n'
+                text = i+' = '+ str(data[i])+'\n'
                 f.write(text)
     else:
         # this is totally reused shitty code, will it cause unnecisary slowdowns? YES! do I care? HELL NO
@@ -58,7 +62,7 @@ def write_output(data, file, clear):
             print(data)
         with open(file, 'w') as f:
             for i in keys:
-                text = i+' = '+data[i]+'\n'
+                text = i+' = '+str(data[i])+'\n'
                 f.write(text)
     return ()
 
@@ -140,34 +144,54 @@ def cooling():
 
 # this will define swirl injuector\
 def simpleswirl():
+    global swirloutput
     spray_angle = x['spray_angle']
     mass_flow_rate = x['mass_flow_rate']
     density = x['density']
     pressure_drop = x['pressure_drop']
     inlet_quantity = x['inlet_quantity']
     kinematic_viscosity = x['kinematic_viscosity']
-    geometric_characteristic = graph_to_value(spray_angle, '2a_A')
+    #Geometry Coefficients
+    inlet_ratio = x['inlet_ratio'] #typically 3-6 (d=4) Larger means Thicker inlet passages
+    vortex_length_ratio = x['vortex_ratio'] #typically ls>2Rin (d=2) smaller the shorter
+    length_to_diameter = x['length_to_diameter']
+    #Step 1
+    #this method is not infinitely expandable, I Hate It !!!
+    if (length_to_diameter == float(2.0)):
+        geometric_characteristic = graph_to_value(spray_angle, '2a_A,l=2')
+    else:
+        if (length_to_diameter == 0.5):
+            geometric_characteristic = graph_to_value(spray_angle, '2a_A,l=0.5')
+        else:
+            print('error, Length to diameter is outside dataset')
     flow_coefficient = graph_to_value(geometric_characteristic, 'A_mu')
+    #Step 2
     nozzle_radius = 0.475 * math.sqrt(mass_flow_rate / (flow_coefficient * math.sqrt(density * pressure_drop)))
+    #step 3
     inlet_spacing_radius = nozzle_radius
     inlet_radius = math.sqrt((inlet_spacing_radius * nozzle_radius) / (inlet_quantity * geometric_characteristic))
+    #Step 5
     inlet_velocity = mass_flow_rate / (inlet_quantity * math.pi * (inlet_radius ** 2) * density)
     reynolds_number = (inlet_velocity * inlet_radius * 2 * math.sqrt(inlet_quantity)) / kinematic_viscosity
     if reynolds_number < 10000:
         print("error, Reynolds Number too low")
-    nozzle_length = 2 * nozzle_radius
-    inlet_length = 4 * inlet_radius
-    vortex_length = 1.5 * inlet_spacing_radius
-    vortex_radius = inlet_spacing_radius + inlet_radius
-    print('nozzle radius = ', nozzle_radius * 100)
-    print('inlet radius = ', inlet_radius * 100)
-    print('inlet length', inlet_length * 100)
-    print('vortex_lenght', vortex_length * 100)
-    print('Vortex Radius', vortex_radius * 100)
-    print('nozzle length = ', nozzle_length * 100)
-    print('flow coefficient = ', flow_coefficient)
+        print(reynolds_number, '<10000')
+    #Step 5
+    swirloutput['nozzle_length'] = length_to_diameter * 2 * nozzle_radius
+    swirloutput['inlet_length'] = inlet_ratio * inlet_radius
+    swirloutput['vortex_length'] = vortex_length_ratio * inlet_spacing_radius
+    swirloutput['vortex_radius'] = inlet_spacing_radius + inlet_radius
+    swirloutput['reynolds_number'] = reynolds_number
+    swirloutput['inlet_velocity']= inlet_velocity
+    swirloutput['inlet_radius'] = inlet_radius
+    swirloutput['nozzle_radius'] = nozzle_radius
+    swirloutput['flow_coefficient'] = flow_coefficient
+    swirloutput['geometric_characteristic'] = geometric_characteristic
     return ()
 
 
 # Main Script Goes here
-
+read_input('input')
+swirloutput = {}
+simpleswirl()
+write_output(swirloutput, 'outputs', 0)
