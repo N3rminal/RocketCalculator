@@ -177,14 +177,14 @@ def simpleswirl():
         print("error, Reynolds Number too low")
         print(reynolds_number, '<10000')
     #Step 5
-    swirloutput['nozzle_length'] = length_to_diameter * 2 * nozzle_radius
-    swirloutput['inlet_length'] = inlet_ratio * inlet_radius
-    swirloutput['vortex_length'] = vortex_length_ratio * inlet_spacing_radius
-    swirloutput['vortex_radius'] = inlet_spacing_radius + inlet_radius
     swirloutput['reynolds_number'] = reynolds_number
+    swirloutput['nozzle_radius'] = nozzle_radius * 100
+    swirloutput['inlet_radius'] = inlet_radius*100
+    swirloutput['inlet_length'] = inlet_ratio * inlet_radius*100
+    swirloutput['vortex_length'] = vortex_length_ratio * inlet_spacing_radius*100
+    swirloutput['vortex_radius'] = (inlet_spacing_radius + inlet_radius)*100
+    swirloutput['nozzle_length'] = length_to_diameter * 2 * nozzle_radius*100
     swirloutput['inlet_velocity']= inlet_velocity
-    swirloutput['inlet_radius'] = inlet_radius
-    swirloutput['nozzle_radius'] = nozzle_radius
     swirloutput['flow_coefficient'] = flow_coefficient
     swirloutput['geometric_characteristic'] = geometric_characteristic
     return ()
