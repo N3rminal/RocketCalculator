@@ -3,7 +3,7 @@ import math
 import IO_Manager
 
 x = {}
-# this function will take an input file and convert it to the dictionary
+# takes input file, and puts it in the variable "x" above
 # once used all variables in dictionary x will be updated autonomously
 # format for input file
 # variable = value
@@ -21,7 +21,8 @@ def read_input(file):
                 split[1] = float(split[1])
                 # insert
                 x.update({split[0]: split[1]})
-            except:
+            except Exception as error:
+                print(error) # I tried main.py and there was no error???
                 continue
 
 
@@ -87,7 +88,7 @@ def simpleswirl(output):
     reynolds_number = (inlet_velocity * inlet_radius * 2 * math.sqrt(inlet_quantity)) / kinematic_viscosity
     if reynolds_number < 10000:
         print("error, Reynolds Number too low")
-        print(reynolds_number, '<10000')
+        print(f"{reynolds_number} < 10000")
     #Step 5
     swirloutput = {}
     swirloutput['reynolds_number'] = reynolds_number
@@ -100,5 +101,5 @@ def simpleswirl(output):
     swirloutput['inlet_velocity']= inlet_velocity
     swirloutput['flow_coefficient'] = flow_coefficient
     swirloutput['geometric_characteristic'] = geometric_characteristic
-    IO_Manager.write_output(swirloutput, output, 0)
+    IO_Manager.write_output(swirloutput, output, False)
     return ()
