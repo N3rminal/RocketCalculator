@@ -1,19 +1,17 @@
 import math
 import csv
+from Calculations import x # Used in write_output
 
 #THIS IS USEFUL DO NOT DELETE
 def getkeys(dictionary):
     return [*dictionary]
 
-# allows to write dictionary(data) to file(file). If clear is 1 then the previous data is not carried over, if 0 then it only overwrites what is in dictionary(data)
+# allows to write dictionary(data) to file(file). If clear is True then the previous data is not carried over, if 0 then it only overwrites what is in dictionary(data)
 def write_output(data, file, clear):
     keys = getkeys(data)
-    if clear == 1:
-        with open(file, 'w') as f:
-            for i in keys:
-                text = i+' = '+ str(data[i])+'\n'
-                f.write(text)
-    else:
+
+    # Don't overwrite data
+    if not clear:
         # this is totally reused shitty code, will it cause unnecisary slowdowns? YES! do I care? HELL NO
         split = []
         with open(file) as f:
@@ -23,7 +21,7 @@ def write_output(data, file, clear):
                 # reformat
                 split[1] = split[1].strip('\n')
                 # insert
-                #finding if the key in dictionary is ocupied
+                # finding if the key in dictionary is ocupied
                 try:
                     temp = data[split[0]]
                 except:
@@ -31,10 +29,12 @@ def write_output(data, file, clear):
                 else:
                     continue
                 data.update({split[0]: split[1]})
-        with open(file, 'w') as f:
-            for i in keys:
-                text = i+' = '+str(data[i])+'\n'
-                f.write(text)
+
+    # "clear" option doesn't matter, this code is used in both places
+    with open(file, 'w') as f:
+        for i in keys:
+            f.write(f"{i} = {data[i]}\n")
+
     return ()
 
 
