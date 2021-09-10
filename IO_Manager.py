@@ -8,10 +8,16 @@ def getkeys(dictionary):
 # allows to write dictionary(data) to file(file). If clear is 1 then the previous data is not carried over, if 0 then it only overwrites what is in dictionary(data)
 def write_output(data, file, clear):
     keys = getkeys(data)
+    adata = {}
+    alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',]
+    for letter in alphabet:
+        for i in keys:
+            if i[0] == letter:
+                adata[i] = data[i]
     if clear == 1:
         with open(file, 'w') as f:
             for i in keys:
-                text = i+' = '+ str(data[i])+'\n'
+                text = i+' = '+ str(adata[i])+'\n'
                 f.write(text)
     else:
         # this is totally reused shitty code, will it cause unnecisary slowdowns? YES! do I care? HELL NO
@@ -27,15 +33,15 @@ def write_output(data, file, clear):
                 # insert
                 #finding if the key in dictionary is ocupied
                 try:
-                    temp = data[split[0]]
+                    temp = adata[split[0]]
                 except:
-                    x.update({split[0]: split[1]})
+                    adata.update({split[0]: split[1]})
                 else:
                     continue
-                data.update({split[0]: split[1]})
+                adata.update({split[0]: split[1]})
         with open(file, 'w') as f:
             for i in keys:
-                text = i+' = '+str(data[i])+'\n'
+                text = i+' = '+str(adata[i])+'\n'
                 f.write(text)
     return ()
 
@@ -85,3 +91,12 @@ def graph_to_value(value, dataset,inverse):
     b = data[p][1] - (m * data[p][0])
     # plug in x
     return(m * value + b)
+
+def print_output(file):
+    with open(file) as f:
+        for line in f:
+            try:
+                print(line)
+            except:
+                continue
+    return()

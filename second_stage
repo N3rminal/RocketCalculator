@@ -1,3 +1,4 @@
+spray_angle = 90
 mass_flow_rate = .133
 density = 1000
 pressure_drop = 277887
