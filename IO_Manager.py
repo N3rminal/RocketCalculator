@@ -5,12 +5,11 @@ import csv
 def getkeys(dictionary):
     return [*dictionary]
 
-# allows to write dictionary(data) to file(file). If clear is 1 then the previous data is not carried over, if 0 then it only overwrites what is in dictionary(data)
-def write_output(data, file, clear):
+def write_stl(data, file, clear):
     keys = getkeys(data)
     adata = {}
-    alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',]
-    for letter in alphabet:
+    characters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','1','2','3','4','5','6','7','8','9']
+    for letter in characters:
         for i in keys:
             if i[0] == letter:
                 adata[i] = data[i]
@@ -46,7 +45,48 @@ def write_output(data, file, clear):
     return ()
 
 
-# This function converts input csv file to a matrix (list of list)
+# allows to write dictionary(data) to file(file). If clear is 1 then the previous data is not carried over, if 0 then it only overwrites what is in dictionary(data)
+def write_output(data, file, clear, operator):
+    keys = getkeys(data)
+    adata = {}
+    alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9']
+    for letter in alphabet:
+        for i in keys:
+            if i[0] == letter:
+                adata[i] = data[i]
+    if clear == 1:
+        with open(file, 'w') as f:
+            for i in keys:
+                text = i+operator+ str(adata[i])+'\n'
+                f.write(text)
+    else:
+        # this is totally reused shitty code, will it cause unnecisary slowdowns? YES! do I care? HELL NO
+        split = []
+        f = open(file,'a')
+        f.close
+        with open(file) as f:
+            for line in f:
+                # copy
+                split = (line.split(' = '))
+                # reformat
+                split[1] = split[1].strip('\n')
+                # insert
+                #finding if the key in dictionary is ocupied
+                try:
+                    temp = adata[split[0]]
+                except:
+                    adata.update({split[0]: split[1]})
+                else:
+                    continue
+                adata.update({split[0]: split[1]})
+        with open(file, 'w') as f:
+            for i in keys:
+                text = i+operator+str(adata[i])+'\n'
+                f.write(text)
+    return ()
+
+
+# This function converts lox_input csv file to a matrix (list of list)
 # Input should be inserted to desending order (however asending should work but I am to lazy to verify that)
 def graph_to_value(value, dataset,inverse):
     # Import Data points
@@ -100,3 +140,14 @@ def print_output(file):
             except:
                 continue
     return()
+
+def makeamericagreat():
+    i = 12
+    with open('t2A_a', 'w') as f:
+        while i > 0:
+            phi = graph_to_value(i, 'A_phi', 0)
+            spray = math.degrees(math.atan())
+            print(spray)
+            p = str(i)+', '+str(spray)+'\n'
+            f.write(p)
+            i -= 0.01

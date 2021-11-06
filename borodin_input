@@ -1,0 +1,14 @@
+mass_flow_rate = 6
+spray_angle = 120
+density = 830
+pressure_drop = 4
+geometric_characteristic = 10
+flow_coefficient = 0.082
+nozzle_radius = 0.955
+swirl_magnitude = 2.5
+swirling_arm = 2.38
+inlet_quantity = 2
+kinematic_viscosity = 0.0000022
+inlet_radius = 0.337
+friction_coefficient = 0.084
+equivalent_geometric_characteristic = 6.1

@@ -1,0 +1,9 @@
+spray_angle = 60
+mass_flow_rate = 4
+pressure_drop = 3432345
+density = 0.083
+inlet_quantity = 3
+nozzle_contraction_coefficient = 4
+kinematic_viscosity = 2.2
+inlet_contraction_factor = 0.9
+nozzle_length_ratio = 2.0
