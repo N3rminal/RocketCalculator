@@ -65,30 +65,34 @@ def simpleswirl(output):
     pressure_drop = x['pressure_drop']
     inlet_quantity = x['inlet_quantity']
     kinematic_viscosity = x['kinematic_viscosity']
+
     #Geometry Coefficients
     inlet_ratio = x['inlet_ratio'] #typically 3-6 (d=4) Larger means Thicker inlet passages
     vortex_length_ratio = x['vortex_ratio'] #typically ls>2Rin (d=2) smaller the shorter
     length_to_diameter = x['length_to_diameter']
+ 
     #Step 1
-    #this method is not infinitely expandable, I Hate It !!!
-    if (length_to_diameter == float(2.0)):
-        geometric_characteristic = IO_Manager.graph_to_value(spray_angle, '2a_A,l=2')
-    elif (length_to_diameter == float(0.5)):
-        geometric_characteristic = IO_Manager.graph_to_value(spray_angle, '2a_A,l=0.5')
+    l_values = [2, 0.5]
+    if length_to_diameter in l_values:
+        geometric_characteristic = IO_Manager.graph_to_value(spray_angle, f"2a_A,l={length_to_diameter}")
     else:
         print('error, Length to diameter is outside dataset')
     flow_coefficient = IO_Manager.graph_to_value(geometric_characteristic, 'A_mu')
+ 
     #Step 2
     nozzle_radius = 0.475 * math.sqrt(mass_flow_rate / (flow_coefficient * math.sqrt(density * pressure_drop)))
+ 
     #step 3
     inlet_spacing_radius = nozzle_radius
     inlet_radius = math.sqrt((inlet_spacing_radius * nozzle_radius) / (inlet_quantity * geometric_characteristic))
-    #Step 5
+
+    #Step 4
     inlet_velocity = mass_flow_rate / (inlet_quantity * math.pi * (inlet_radius ** 2) * density)
     reynolds_number = (inlet_velocity * inlet_radius * 2 * math.sqrt(inlet_quantity)) / kinematic_viscosity
     if reynolds_number < 10000:
         print("error, Reynolds Number too low")
         print(f"{reynolds_number} < 10000")
+
     #Step 5
     swirloutput = {}
     swirloutput['reynolds_number'] = reynolds_number
